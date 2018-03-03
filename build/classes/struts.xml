@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+		"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+		"http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+	<!-- 配置允许文件上传最大值 -->
+	<constant name="struts.multipart.maxSize" value="20971520"/>
+	<!-- 设置开启开发者模式 -->
+	<constant name="struts.devMode" value="true" />
+	<!-- 设置允许动态方法调用 -->
+    <constant name="struts.enable.DynamicMethodInvocation" value="true"></constant>
+    <package name="strutsTest" namespace="/" extends="struts-default">
+    
+    	<interceptors>
+    		<!-- 自定义拦截器 -->
+    		<interceptor name="loginInterceptor" class="com.struts.interceptor.LoginInterceptor"></interceptor>
+    		<!-- 自定义拦截器栈 -->
+    		<interceptor-stack name="myStack">
+    			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+    			<interceptor-ref name="defaultStack"></interceptor-ref>
+    		</interceptor-stack>
+    	</interceptors>
+    	<!-- 设置默认拦截器 -->
+    	<default-interceptor-ref name="myStack"></default-interceptor-ref>
+    	
+    	<global-results>
+    		<result name="login">/login.jsp</result>
+    	</global-results>
+    
+    	<global-allowed-methods>regex:.*</global-allowed-methods>
+        
+        <action name="user" class="com.struts.action.UserAction">
+            <result name="error">/login.jsp</result>
+			<result name="success">/main.jsp</result>
+			<result name="logOut">/login.jsp</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+        </action>
+        
+        <action name="ddType" class="com.struts.action.DataDicTypeAction">
+			<result name="success">/main.jsp</result>
+			<result name="yes" type="redirectAction">/ddType!ddTypeList</result>
+        </action>
+        
+        <action name="dataDic" class="com.struts.action.DataDicAction">
+			<result name="success">/main.jsp</result>
+			<result name="yes" type="redirectAction">/dataDic!dataDicList</result>
+        </action>
+        
+        <action name="grade" class="com.struts.action.GradeAction">
+			<result name="success">/main.jsp</result>
+			<result name="yes" type="redirectAction">/grade!gradeList</result>
+        </action>
+        
+        <action name="class" class="com.struts.action.ClassAction">
+			<result name="success">/main.jsp</result>
+			<result name="yes" type="redirectAction">/class!classList</result>
+        </action>
+        
+        <action name="student" class="com.struts.action.StudentAction">
+			<result name="success">/main.jsp</result>
+			<result name="yes" type="redirectAction">/student!list</result>
+			<!-- 定义文件上传配置 -->
+			<interceptor-ref name="fileUpload">
+	              <param name="allowedTypes">image/bmp,image/x-png,image/gif,image/jpg,image/jpeg</param>
+	              <param name="maximumSize">2000000</param>
+	        </interceptor-ref>
+	        <interceptor-ref name="loginInterceptor"></interceptor-ref>
+	        <interceptor-ref name="defaultStack"></interceptor-ref>
+        </action>
+    </package>
+</struts>
